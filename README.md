@@ -71,7 +71,7 @@ string with bytes represented as code units from 0x00 to 0xFF.
 ### Synopsis
 
     utf8       = require('dot-utf8');
-    decoder    = utf8.decoder();
+    decoder    = new utf8.decoder();
 
 ### Description
 
@@ -88,7 +88,7 @@ Object to manage state of decoding.
 ### Synopsis
 
     utf8         = require('dot-utf8');
-    decoder      = utf8.decoder();
+    decoder      = new utf8.decoder();
     utf16String  = decoder.decode( utf8STring );
     utf16String += decoder.decode( moreUtf8String );
 
