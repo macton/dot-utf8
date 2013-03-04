@@ -1,0 +1,18 @@
+{
+  "name": "dot-utf8",
+  "version": "0.1.0",
+  "description": "Simple utf8 encoder/decoder.",
+  "main": "./lib/lib_utf8.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/macton/dot-utf8.git"
+  },
+  "keywords": [
+    "utf8"
+  ],
+  "author": "Robert Ginda <rginda@google.com>",
+  "license": "Google-BSD"
+}
