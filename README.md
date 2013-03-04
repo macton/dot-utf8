@@ -32,9 +32,9 @@ If you want to contribute to the upstream, the best place to ask is the [chromiu
 
 If you would like to contribute to this port, I have some things in mind:
 * There is a TODO worth closer examination:
-> TODO(davidben): Do we need a stateful version of this that can
-> handle a surrogate pair split in two calls? What happens if a
-> keypress event would have contained a character outside the BMP?
+    > TODO(davidben): Do we need a stateful version of this that can
+    > handle a surrogate pair split in two calls? What happens if a
+    > keypress event would have contained a character outside the BMP?
 * Figure out a (good) way to automate the generation of this readme file.
 * Make some tests.
 * Add examples to this readme in the API section.
@@ -43,7 +43,7 @@ If you would like to contribute to this port, I have some things in mind:
 ## API
 - [encode](#encode)
 - [decoder](#decoder)
-- [decoder.decode](#decoder.decode)
+- [decoder.decode](#decoderdecode)
 
 ## encode
 
