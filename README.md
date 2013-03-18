@@ -31,6 +31,7 @@ Pull requests welcome.
 * #TODO EncodeStream
 * #TODO tests for DecodeStream
 * #TODO tests for EncodeStream
+* #TODO document utf8.utils
 
 ## API
 - [encode](#encode)
@@ -85,11 +86,8 @@ Object to manage state of decoding.
 
 ### Description
 
-Decodes a some UTF-8 data from UTF-16 source, taking into account state 
-from previous data streamed through the encoder.
-
-Represented as a JavaScript String with each code unit representing
-a byte between 0x00 to 0xFF.
+Converts UTF-8 source to UTF-16, taking into account state from previous 
+data streamed through the encoder.
 
 ### Return Value
 
@@ -125,8 +123,8 @@ Object to manage state of decoding.
 
 ### Description
 
-Encodes a some UTF-16 data from UTF-8 source, taking into account state
-from previous data streamed through the encoder.
+Converts UTF-16 source to UTF-8, taking into account state from previous 
+data streamed through the encoder.
 
 Represented as a JavaScript String with each code unit representing
 a byte between 0x00 to 0xFF.
