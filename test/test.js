@@ -1,33 +1,113 @@
-utf8 = require('../lib/lib_utf8');
 
-// See: http://mathiasbynens.be/notes/javascript-encoding
+// UTF8 codepages https://github.com/macton/utf8-blocks
 
-var testFailCount = 0;
-var decoder       = new utf8.decoder();
+var utf8       = require('../lib/lib_utf8');
+var csv        = require('csv-string');
+var fs         = require('fs');
+var path       = require('path');
 
-function testDecoder( name, utf8String, expectedUtf16String ) {
-  var resultUtf16 = decoder.decode( utf8String );
-  if ( resultUtf16 != expectedUtf16String ) {
-    console.log( name + ' decoded incorrectly.');
-    testFailCount++;
+var kTextInfo    = '\033[94m';
+var kTextSuccess = '\033[92m';
+var kTextWarning = '\033[93m';
+var kTextError   = '\033[91m';
+var kTextReset   = '\033[0m';
+
+function logError( s ) {
+  console.log( kTextError + 'ERROR: ' + s + kTextReset );
+}
+
+function testCodePageDecode( filePath ) {
+  fs.readFile( path.resolve( __dirname, 'codepages', filePath ), function (err, data) {
+    if ( err ) {
+      logError( 'Could not read file ' + filePath + ' error: ' + JSON.stringify( err ) );
+      return;
+    }
+    var lines      = data.toString().split('\n');
+    var lineCount  = lines.length;
+    var errorCount = 0;
+    var i;
+    for (i=0;i<lineCount;i++) {
+      var line         = lines[i];
+      var commentStart = line.indexOf('#');
+      var strippedLine = ( commentStart >= 0 ) ? line.slice(0,commentStart) : line;
+      var trimmedLine  = strippedLine.trim();
+      if ( trimmedLine.length > 0 ) {
+        var row                     = csv.parse( trimmedLine )[0];
+        var codePoint               = row[0].trim();
+        var valueUtf8Hex            = row[1].trim();
+        var valueUtf8               = utf8.utils.unquoteString( valueUtf8Hex );
+        var literalFromUtf8         = utf8.decode( valueUtf8 );
+        var valueUtf16Escape        = codePoint.replace(/U\+/i,'\\u');
+        var literalFromUtf16        = utf8.utils.unquoteString( valueUtf16Escape );
+  
+        if ( literalFromUtf16 != literalFromUtf8 ) {
+          logError( valueUtf8Hex + ' != ' + codePoint );
+          errorCount++;
+        }
+      }
+    }
+    if ( errorCount == 0 ) {
+      console.log( 'utf8.decode codepage ' + filePath + ' = ' + kTextSuccess + 'PASSED' + kTextReset );
+    } else {
+      console.log( 'utf8.decode codepage ' + filePath + ' = ' + kTextError + 'FAILED (' + errorCount + ' errors)' + kTextReset );
+    }
+  });
+}
+
+function testCodePageEncode( filePath ) {
+  fs.readFile( path.resolve( __dirname, 'codepages', filePath ), function (err, data) {
+    if ( err ) {
+      logError( 'Could not read file ' + filePath + ' error: ' + JSON.stringify( err ) );
+      return;
+    }
+    var lines      = data.toString().split('\n');
+    var lineCount  = lines.length;
+    var errorCount = 0;
+    var i;
+    for (i=0;i<lineCount;i++) {
+      var line         = lines[i];
+      var commentStart = line.indexOf('#');
+      var strippedLine = ( commentStart >= 0 ) ? line.slice(0,commentStart) : line;
+      var trimmedLine  = strippedLine.trim();
+      if ( trimmedLine.length > 0 ) {
+        var row                     = csv.parse( trimmedLine )[0];
+        var codePoint               = row[0].trim();
+        var valueUtf8Hex            = row[1].trim();
+        var valueUtf16Escape        = codePoint.replace(/U\+/i,'\\u');
+        var literalFromUtf16        = utf8.utils.unquoteString( valueUtf16Escape );
+        var utf8FromLiteral         = utf8.encode( literalFromUtf16 );
+        var utf8HexFromLiteral      = utf8.utils.hexEncode( utf8FromLiteral );
+
+        if ( utf8HexFromLiteral.toLowerCase() != valueUtf8Hex.toLowerCase() ) {
+          logError( utf8HexFromLiteral + ' != ' + valueUtf8Hex );
+          errorCount++;
+        }
+      }
+    }
+    if ( errorCount == 0 ) {
+      console.log( 'utf8.encode codepage ' + filePath + ' = ' + kTextSuccess + 'PASSED' + kTextReset );
+    } else {
+      console.log( 'utf8.encode codepage ' + filePath + ' = ' + kTextError + 'FAILED (' + errorCount + ' errors)' + kTextReset );
+    }
+  });
+}
+
+// DecodeStream
+// See also: http://mathiasbynens.be/notes/javascript-encoding
+
+fs.readdir( path.resolve( __dirname, 'codepages' ), function( err, paths ) {
+  if ( err ) {
+    logError('Could not read codepages directory');
+    return;
   }
-  return resultUtf16;
-}
-
-function testEncode( name, utf16String, expectedUtf8String ) {
-  var resultUtf8 = utf8.encode( utf16String );
-  if ( resultUtf8 != expectedUtf8String ) {
-    console.log( name + ' encoded incorrectly.');
-    testFailCount++;
+  var pathCount = paths.length;
+  var i;
+  for (i=0;i<pathCount;i++) {
+    var filePath = paths[i];
+    if ( filePath.indexOf( '.csv' ) == -1 ) {
+      continue;
+    }
+    testCodePageDecode( filePath );
+    testCodePageEncode( filePath );
   }
-  return resultUtf8;
-}
-
-// #todo Need some tests here
-
-
-if ( testFailCount ) {
-  console.log( testFailCount + ' tests failed.' ); ;
-} else {
-  console.log( 'All tests succeeded.' );
-}
+});

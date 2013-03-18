@@ -1,6 +1,6 @@
 {
   "name": "dot-utf8",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple utf8 encoder/decoder.",
   "main": "./lib/lib_utf8.js",
   "scripts": {
@@ -13,6 +13,6 @@
   "keywords": [
     "utf8"
   ],
-  "author": "Robert Ginda <rginda@google.com>",
-  "license": "Google-BSD"
+  "author": "Mike Acton <macton@gmail.com>",
+  "license": "MIT"
 }

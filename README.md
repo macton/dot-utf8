@@ -1,8 +1,6 @@
 # dot-utf8
 
-Author: Robert Ginda <rginda@google.com>
-
-Port to Node.js: Mike Acton <macton@gmail.com>
+Author: Mike Acton <macton@gmail.com>
 
 Simple utf8 encoder/decoder.
 
@@ -24,28 +22,21 @@ And use with `var utf8 = require("dot-utf8")`
 
 ## Questions?
 
-If you have questions, the best place to ask is the [chromium-hterm google group](https://groups.google.com/a/chromium.org/forum/?fromgroups=#!forum/chromium-hterm)
+Submit issue on github.
 
 ## Contribute?
 
-If you want to contribute to the upstream, the best place to ask is the [chromium-hterm google group](https://groups.google.com/a/chromium.org/forum/?fromgroups=#!forum/chromium-hterm)
+Pull requests welcome.
 
-If you would like to contribute to this port, I have some things in mind:
-* There is a TODO worth closer examination:
-
-    TODO(davidben): Do we need a stateful version of this that can
-    handle a surrogate pair split in two calls? What happens if a
-    keypress event would have contained a character outside the BMP?
-
-* Figure out a (good) way to automate the generation of this readme file.
-* Make some tests.
-* Add examples to this readme in the API section.
-* Compare to: http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+* #TODO EncodeStream
+* #TODO tests for DecodeStream
+* #TODO tests for EncodeStream
 
 ## API
 - [encode](#encode)
 - [decoder](#decoder)
-- [decoder.decode](#decoderdecode)
+- [DecodeStream.decode](#decodestreamdecode)
+- [EncodeStream.encode](#encodestreamencode)
 
 ## encode
 
@@ -66,12 +57,12 @@ string with bytes represented as code units from 0x00 to 0xFF.
 <sub><sup>([Return to API)](#api)</sup></sub>
 
 
-## decoder
+## DecodeStream
 
 ### Synopsis
 
     utf8       = require('dot-utf8');
-    decoder    = new utf8.decoder();
+    decoder    = new utf8.DecodeStream();
 
 ### Description
 
@@ -83,19 +74,19 @@ Object to manage state of decoding.
 
 <sub><sup>([Return to API)](#api)</sup></sub>
 
-## decoder.decode
+## DecodeStream.decode
 
 ### Synopsis
 
     utf8         = require('dot-utf8');
-    decoder      = new utf8.decoder();
+    decoder      = new utf8.DecodeStream();
     utf16String  = decoder.decode( utf8STring );
     utf16String += decoder.decode( moreUtf8String );
 
 ### Description
 
-Decodes a some UTF-8 data, taking into account state from previous
-data streamed through the encoder.
+Decodes a some UTF-8 data from UTF-16 source, taking into account state 
+from previous data streamed through the encoder.
 
 Represented as a JavaScript String with each code unit representing
 a byte between 0x00 to 0xFF.
@@ -103,6 +94,46 @@ a byte between 0x00 to 0xFF.
 ### Return Value
 
 The data decoded into a JavaScript UTF-16 string.
+
+<sub><sup>([Return to API)](#api)</sup></sub>
+
+## EncodeStream
+
+### Synopsis
+
+    utf8       = require('dot-utf8');
+    encoder    = new utf8.EncodeStream();
+
+### Description
+
+A stateful UTF-8 encoder.
+
+### Return Value
+
+Object to manage state of decoding.
+
+<sub><sup>([Return to API)](#api)</sup></sub>
+
+## EncodeStream.encode
+
+### Synopsis
+
+    utf8        = require('dot-utf8');
+    encoder     = new utf8.EncodeStream();
+    utf8String  = encoder.encode( utf16STring );
+    utf8String += encoder.encode( moreUtf16String );
+
+### Description
+
+Encodes a some UTF-16 data from UTF-8 source, taking into account state
+from previous data streamed through the encoder.
+
+Represented as a JavaScript String with each code unit representing
+a byte between 0x00 to 0xFF.
+
+### Return Value
+
+The data encoded into a JavaScript UTF-8 string.
 
 <sub><sup>([Return to API)](#api)</sup></sub>
 
