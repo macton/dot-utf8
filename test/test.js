@@ -110,5 +110,25 @@ fs.readdir( path.resolve( __dirname, 'codepages' ), function( err, paths ) {
       return (0);
     });
 
+    testCodePage( 'utf8.EncodeStream.encode', filePath, function( codePoint, valueUtf8Hex, description ) {
+      var encoder                = new utf8.EncodeStream();
+      var valueUtf16Escape       = codePoint.replace(/U\+/i,'\\u');
+      var literalFromUtf16       = utf8.utils.unquoteString( valueUtf16Escape );
+      var literalFromUtf16Length = literalFromUtf16.length;
+      var utf8FromLiteral        = '';
+      var i;
+      
+      for (i=0;i<literalFromUtf16Length;i++) {
+        utf8FromLiteral += encoder.encode( literalFromUtf16[i] );
+      }
+
+      var utf8HexFromLiteral  = utf8.utils.hexEncode( utf8FromLiteral );
+      if ( utf8HexFromLiteral.toLowerCase() != valueUtf8Hex.toLowerCase() ) {
+        logError( utf8HexFromLiteral + ' != ' + valueUtf8Hex + ' (' + valueUtf16Escape + ')' );
+        return (1);
+      }
+      return (0);
+    });
+
   }
 });

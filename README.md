@@ -17,6 +17,4 @@ Submit issue on github. Pull requests welcome.
 
 ### TODO
 
-* EncodeStream
-* Tests for EncodeStream
 * Document utf8.utils
