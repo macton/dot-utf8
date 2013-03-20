@@ -1,6 +1,6 @@
 {
   "name": "dot-utf8",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Simple utf8 encoder/decoder.",
   "main": "./lib/lib_utf8.js",
   "scripts": {
