@@ -17,5 +17,4 @@ Submit issue on github. Pull requests welcome.
 
 ### TODO
 
-* Document utf8.utils.unquoteString
-* Document utf8.utils.quoteString
+No pending issues. More tests are always nice though.
